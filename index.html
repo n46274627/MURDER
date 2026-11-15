@@ -3,76 +3,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>תעלומת רצח</title>
 <style>
-:root{--bg:#faf7f2;--fg:#1d1a16;--card:#fff;--mut:#7a7167;--ac:#8b2d2d;--ln:#e4ddd2;--ok:#1f8a4c;--no:#c23030;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#efe9df;--card:#221e18;--mut:#a39a8d;--ac:#d86a6a;--ln:#38322a;color-scheme:dark}}
+:root{--bg:#faf7f2;--fg:#1d1a16;--card:#fff;--mut:#7a7167;--ac:#8b2d2d;--ln:#e4ddd2;--ok:#1f8a4c;--no:#c23030;--fl:#f4eee3;--wl:#5b4f42;--rb:#fde8e8;--rt:#7a1f1f;--rbd:#e9b4b4;--gb:#e3f5ea;--gt:#145c33;--gbd:#a9d9bc;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#efe9df;--card:#221e18;--mut:#a39a8d;--ac:#d86a6a;--ln:#38322a;--fl:#2a251d;--wl:#b8ad9c;--rb:#3a1f1f;--rt:#f3b6b6;--rbd:#6a3030;--gb:#1d3626;--gt:#a8e6c0;--gbd:#2f6a45;color-scheme:dark}}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,"Segoe UI",Arial,sans-serif}
 #app{max-width:640px;margin:auto;height:100%;display:flex;flex-direction:column;padding:10px;box-sizing:border-box;gap:8px}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:12px}
-h1{margin:6px 0;font-size:24px;color:var(--ac)}h3{margin:0 0 6px}
-input,button{font:inherit;border-radius:10px;border:1px solid var(--ln);padding:10px;background:var(--card);color:var(--fg)}
+h1{margin:6px 0;font-size:24px;color:var(--ac)}h3{margin:0 0 6px}h4{margin:12px 0 4px;color:var(--ac)}
+input,button,textarea{font:inherit;border-radius:10px;border:1px solid var(--ln);padding:10px;background:var(--card);color:var(--fg)}
 button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}button:disabled{opacity:.45;cursor:default}
 .row{display:flex;gap:8px}.row>input{flex:1;min-width:0}
 .hide{display:none!important}.mut{color:var(--mut);font-size:14px}.err{color:var(--no)}
-#bar{display:flex;justify-content:space-between;align-items:center;font-weight:600}
-#tm{font-variant-numeric:tabular-nums;color:var(--ac);font-size:20px}
-#tabs{display:flex;gap:6px}#tabs button{flex:1}#tabs .on{background:var(--ac);color:#fff;border-color:var(--ac)}
+#bar{display:flex;gap:8px;align-items:center;font-weight:600}#bar span{flex:1}#bar button{padding:6px 10px}
+#tm{font-variant-numeric:tabular-nums;color:var(--ac);font-size:20px;flex:0!important}
+#tabs{display:flex;gap:6px}#tabs button{flex:1;padding:8px 4px}#tabs .on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .panel{flex:1;min-height:0;overflow:auto}
-#pc{display:flex;flex-direction:column;gap:8px}#msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:6px}
-.m{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:6px 10px}.m b{color:var(--ac)}.m.me{border-color:var(--ac)}
+#pc{display:flex;flex-direction:column;gap:8px}#msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:5px}
+#chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}.chip{white-space:nowrap;padding:6px 12px;border-radius:20px}.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}.dot2{color:var(--no)}
+.b{border-radius:10px;padding:6px 10px;border:1px solid}.b.r{background:var(--rb);color:var(--rt);border-color:var(--rbd)}.b.g{background:var(--gb);color:var(--gt);border-color:var(--gbd)}
 .story p{margin:0 0 10px}.kill{border-color:var(--no);border-width:2px}
 .pr{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--ln)}.pr .n{flex:1}.pr.clr .n{text-decoration:line-through;color:var(--mut)}
 .big{font-size:34px;text-align:center;font-weight:700;padding:18px;border-radius:12px;color:#fff;margin:8px 0}
 .ok{background:var(--ok)}.no{background:var(--no)}
-#ov{position:fixed;inset:0;background:var(--bg);overflow:auto;padding:16px;z-index:5;box-sizing:border-box}
+.ovl{position:fixed;inset:0;background:var(--bg);overflow:auto;padding:16px;z-index:5;box-sizing:border-box}
 .cnt{font-size:96px;text-align:center;color:var(--ac);font-weight:700;margin-top:20vh}
-textarea{width:100%;min-height:170px;box-sizing:border-box;font:inherit;border-radius:10px;border:1px solid var(--ln);padding:10px;background:var(--card);color:var(--fg);resize:vertical}
-#mapbox svg text{font:600 13px system-ui,Arial,sans-serif;text-anchor:middle}
+textarea{width:100%;min-height:150px;box-sizing:border-box;resize:vertical}
+#mapbox svg text{font:600 12px system-ui,Arial,sans-serif;text-anchor:middle}
+.num{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--ac);color:#fff;align-items:center;justify-content:center;font-size:12px;flex:none}
+#hp p,#hp li{margin:0 0 6px}#hp ul{margin:0 0 8px;padding-inline-start:20px}.ex{background:var(--bg);border:1px dashed var(--ln);border-radius:8px;padding:6px 10px;margin:4px 0}
 </style></head><body><div id="app">
 <div id="v-in" class="card"><h1>🕵️ תעלומת רצח</h1>
-<p class="mut">מישהו בחדר הוא הרוצח. קראו את הסיפור האישי שלכם, חקרו בצ׳אט, והצביעו.</p>
+<p class="mut">מישהו בחדר הוא הרוצח. קראו את הסיפור האישי שלכם, חקרו כל שחקן בנפרד, והצביעו.</p>
 <div class="row" style="margin-bottom:8px"><input id="nm" placeholder="השם שלך" maxlength="16"></div>
 <div class="row"><input id="cd" placeholder="קוד משחק" inputmode="numeric" maxlength="4"><button class="p" id="join">הצטרף</button></div>
-<div style="margin-top:8px"><button id="new">פתח משחק חדש</button></div><p id="er" class="err"></p></div>
+<div class="row" style="margin-top:8px"><button id="new" style="flex:1">פתח משחק חדש</button><button id="test" style="flex:1">🧪 בדיקת משחק</button></div>
+<div style="margin-top:8px"><button data-act="help">📖 הוראות מפורטות</button></div><p id="er" class="err"></p></div>
 
 <div id="v-wait" class="card hide"><h3>חדר המתנה</h3><p>קוד המשחק: <b id="wc" style="font-size:28px"></b></p>
-<div id="wl"></div><p class="mut" id="wh"></p><button class="p hide" id="start">התחל משחק (נועל כניסה)</button></div>
+<div id="wl"></div><p class="mut" id="wh"></p><div class="row"><button class="p hide" id="start" style="flex:1">התחל משחק (נועל כניסה)</button><button data-act="help">📖 הוראות</button><button data-act="home">🏠 חזרה</button></div></div>
 
 <div id="v-g" class="hide" style="display:flex;flex-direction:column;gap:8px;flex:1;min-height:0">
-<div id="bar" class="card"><span id="ph"></span><span id="tm"></span></div>
-<div id="tabs"><button data-t="c" class="on">צ׳אט</button><button data-t="s">התיק שלי</button><button data-t="m">מפה</button><button data-t="b">חשודים</button></div>
-<div id="pc" class="panel"><div id="msgs"></div><div class="row"><input id="ci" placeholder="כתוב הודעה…" maxlength="300"><button class="p" id="cs">שלח</button></div></div>
-<div id="ps" class="panel story hide"></div><div id="pm" class="panel hide"><div class="card"><div id="mapbox"></div></div><div class="card" style="margin-top:8px"><h3>הפתקים שלי</h3><p class="mut">אזור פרטי שרק אתה רואה. רשום כאן רמזים, חשדות וסתירות.</p><textarea id="notes" placeholder="הפתקים שלך…"></textarea></div></div><div id="pb" class="panel hide"></div></div>
-<div id="ov" class="hide"></div></div>
-
+<div id="bar" class="card"><button data-act="back">🏠 חזרה</button><span id="ph"></span><span id="tm"></span><button data-act="bell" id="bell">🔔</button></div>
+<div id="tabs"><button data-t="c" class="on" id="tabc">חקירות</button><button data-t="s">התיק שלי</button><button data-t="m">מפה</button><button data-t="b">חשודים</button></div>
+<div id="pc" class="panel"><div id="chips"></div><div id="thh" class="mut"></div><div id="msgs"></div><div class="row"><input id="ci" placeholder="כתוב הודעה…" maxlength="300"><button class="p" id="cs">שלח</button></div></div>
+<div id="ps" class="panel story hide"></div>
+<div id="pm" class="panel hide"><div class="card"><div id="mapbox"></div></div><div class="card" style="margin-top:8px"><h3>הפתקים שלי</h3><p class="mut">אזור פרטי שרק אתה רואה. רשום כאן רמזים, חשדות וסתירות.</p><textarea id="notes" placeholder="הפתקים שלך…"></textarea></div></div>
+<div id="pb" class="panel hide"></div></div>
+<div id="ov" class="ovl hide"></div>
+<div id="hp" class="ovl hide"><div class="card">
+<h3>📖 איך משחקים</h3>
+<h4>המטרה</h4><p>אחד השחקנים (נבחר אקראית) רצח את הקורבן. כולם מקבלים סיפור אישי. החפים צריכים לגלות מי הרוצח, והרוצח צריך להסתיר את זה. יש 20 דקות.</p>
+<h4>איך מתחילים</h4><ul><li>הקלידו שם. אחד לוחץ <b>פתח משחק חדש</b> ומקבל קוד בן 4 ספרות.</li><li>השאר מקלידים שם וקוד ולוחצים <b>הצטרף</b>.</li><li>כשיש לפחות 3 שחקנים, המארח לוחץ <b>התחל</b>. אחרי זה הכניסה ננעלת.</li><li>רוצים רק להתנסות לבד? לחצו <b>בדיקת משחק</b>: תקבלו משחק עם שני שחקני דמה שמצביעים עליכם מיד. המפה והתסריט זהים בכל בדיקה.</li></ul>
+<h4>לשונית “התיק שלי”</h4><p>הסיפור הפרטי שלכם: מי אתם, מה הסוד שלכם, והמסלול שלכם בכל שעה (20:00, 20:30, 21:00, 21:30), עם מי שראיתם ומה הם עשו. רק אתם רואים אותו.</p>
+<h4>לשונית “מפה”</h4><p>תוכנית הקומה של המקום. חדר הרצח מסומן באדום. המספרים 1 עד 4 הם המסלול שלכם לפי השעות. מתחת למפה רשימה של מי שראיתם בכל שעה. מתחתיה אזור פתקים פרטי.</p>
+<h4>לשונית “חקירות”</h4><p>לכל שחקן יש חדר חקירה משלו, וכולם רואים את כל החדרים. שאלות של אחרים מופיעות <b style="color:var(--no)">באדום</b> והתשובות של השחקן עצמו <b style="color:var(--ok)">בירוק</b>. כשמישהו כותב בחדר שלכם, תשמעו צלצול ותראו נקודה אדומה.</p>
+<div class="ex"><b>דוגמה, חדר החקירה של איתמר:</b><br>🔴 דנה: איפה היית ב־21:30?<br>🟢 איתמר: הייתי בספרייה וקראתי עיתון.<br>🔴 יוסי: ראית מישהו שם?<br>🟢 איתמר: ראיתי את דנה, היא הכינה תה.</div>
+<p><b>רעיון חכם:</b> השוו תשובות. אם איתמר אומר שדנה הייתה בספרייה ב־21:30, ודנה אמרה שהייתה במטבח, מישהו משקר.</p>
+<h4>לשונית “חשודים”</h4><p>כולם חשודים כברירת מחדל. אפשר להסיר חשודים לעצמכם (רק אתם רואים). כשמוכנים, לחצו <b>הצבע</b> ואז שוב לאישור. ההצבעה ננעלת.</p>
+<h4>הסיום</h4><p>כשכולם הצביעו או כשנגמרים 20 הדקות, תהיה ספירה לאחור מ־10 ל־1. אחריה יוצג הנאשם: ירוק אם צדקתם, אדום אם טעיתם. תראו מי הצביע על מי, ואם טעיתם גם מי הרוצח האמיתי וסיפורו. מי שלא הצביע לא נספר.</p>
+<h4>טיפים</h4><ul><li><b>חפים:</b> אל תחשפו את הסוד שלכם בקלות, אבל אל תשקרו על המיקום. חפשו סתירות.</li><li><b>הרוצח:</b> אל תכחישו הכול. השתמשו בסיפור המכסה והפנו חשד לאחרים.</li><li>כפתור <b>🏠 חזרה</b> תמיד זמין כדי להתחיל משחק חדש.</li></ul>
+<button class="p" data-act="closehelp" style="width:100%">הבנתי, סגור</button></div></div>
+</div>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const L=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
 let ID=L("mm-id");if(!ID){ID=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now());L("mm-id",ID)}
-const S={code:"",s:null,ph:{p:"lobby"},tab:"c",pend:null,es:null};
+const S={code:"",s:null,ph:{p:"lobby"},tab:"c",th:null,seen:{},pend:null,es:null,mute:false,lastMine:null};
 const API=(p,b)=>fetch(p,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...b,id:ID})}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.e||"שגיאה");return j});
-function err(m){$("#er").textContent=m||""}
-async function enter(create){const name=$("#nm").value.trim();if(!name)return err("הכנס שם");L("mm-name",name);err();
- try{const r=await API(create?"/api/new":"/api/join",{name,code:$("#cd").value.trim()});connect(r.code)}catch(e){err(e.message)}}
-function connect(code){S.code=code;L("mm-code",code);$("#notes").value=L("mm-note-"+code+ID)||"";if(S.es)S.es.close();
+const err=m=>{$("#er").textContent=m||""};
+const show=v=>["#v-in","#v-wait","#v-g"].forEach(x=>$(x).classList.toggle("hide",x!==v));
+let AC;const audio=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}};
+function beep(){if(S.mute||!AC)return;try{const t=AC.currentTime;[880,1320].forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.connect(g);g.connect(AC.destination);const s=t+i*.16;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.3,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+.3);o.start(s);o.stop(s+.32)})}catch(e){}}
+async function enter(kind){const name=$("#nm").value.trim();if(!name)return err("הכנס שם");L("mm-name",name);err();audio();
+ try{const r=await API({new:"/api/new",test:"/api/test",join:"/api/join"}[kind],{name,code:$("#cd").value.trim()});connect(r.code)}catch(e){err(e.message)}}
+function connect(code){S.code=code;S.th=null;S.seen={};S.lastMine=null;L("mm-code",code);$("#notes").value=L("mm-note-"+code+ID)||"";if(S.es)S.es.close();
  const es=S.es=new EventSource(`/api/events?code=${code}&id=${encodeURIComponent(ID)}`);
  es.onmessage=e=>{const m=JSON.parse(e.data);S.ph=m.phase;if(m.tick){tick();return}S.s=m;render()}}
-function render(){const m=S.s;if(!m)return;$("#v-in").classList.add("hide");
- if(m.status==="lobby"){$("#v-g").classList.add("hide");$("#v-wait").classList.remove("hide");$("#wc").textContent=m.code;
+function goHome(){if(S.es)S.es.close();S.es=null;L("mm-code",null);S.s=null;S.code="";S.th=null;S.seen={};S.lastMine=null;$("#ov").classList.add("hide");show("#v-in");err()}
+let bt;function arm(b){if(b.dataset.arm){delete b.dataset.arm;goHome();return}b.dataset.arm=1;const o=b.textContent;b.textContent="לחץ שוב לאישור";clearTimeout(bt);bt=setTimeout(()=>{delete b.dataset.arm;b.textContent=o},3000)}
+function render(){const m=S.s;if(!m)return;
+ if(m.status==="lobby"){show("#v-wait");$("#wc").textContent=m.code;
   $("#wl").innerHTML=m.players.map(p=>`<div class="pr"><span class="n">${esc(p.name)}${p.id===ID?" (אתה)":""}</span></div>`).join("");
   const host=m.host===ID;$("#start").classList.toggle("hide",!host);$("#start").disabled=m.players.length<3;
   $("#wh").textContent=host?(m.players.length<3?"צריך לפחות 3 שחקנים כדי להתחיל.":"כשכולם כאן, התחל. אחרי ההתחלה הכניסה נעולה."):"ממתינים שהמארח יתחיל…";return}
- $("#v-wait").classList.add("hide");$("#v-g").classList.remove("hide");
- $("#ps").innerHTML=m.story||"";drawMap();drawBoard();drawChat();tick()}
-function drawChat(){const el=$("#msgs");el.innerHTML=S.s.chat.map(c=>`<div class="m ${c.uid===ID?"me":""}"><b>${esc(c.name)}:</b> ${esc(c.text)}</div>`).join("");el.scrollTop=el.scrollHeight}
+ show("#v-g");const mine=m.chat.filter(c=>c.to===ID&&c.uid!==ID).length;if(S.lastMine!==null&&mine>S.lastMine)beep();S.lastMine=mine;
+ $("#ps").innerHTML=m.story||"";drawMap();drawBoard();drawThreads();tick()}
+function drawThreads(){const m=S.s,R=m.roster;if(!R)return;if(!S.th||!R.some(p=>p.id===S.th))S.th=(R.find(p=>p.id!==ID)||R[0]).id;
+ const cnt=id=>m.chat.filter(c=>c.to===id).length,sel=S.th;if(S.tab==="c")S.seen[sel]=cnt(sel);let any=false;
+ $("#chips").innerHTML=R.map(p=>{const u=(p.id!==sel||S.tab!=="c")&&cnt(p.id)>(S.seen[p.id]||0);if(u)any=true;return `<button class="chip ${p.id===sel?"on":""}" data-th="${p.id}">${esc(p.name)}${p.id===ID?" (אתה)":""}${u?' <span class="dot2">●</span>':""}</button>`}).join("");
+ const nm=R.find(p=>p.id===sel).name,ms=m.chat.filter(c=>c.to===sel);
+ $("#thh").innerHTML=sel===ID?"החקירה שלך: אחרים שואלים אותך (באדום) ואתה עונה (בירוק)":`חקירה של <b>${esc(nm)}</b>: שאלות באדום, תשובות שלו בירוק`;
+ $("#msgs").innerHTML=ms.map(c=>`<div class="b ${c.uid===sel?"g":"r"}"><b>${esc(c.name)}:</b> ${esc(c.text)}</div>`).join("")||'<p class="mut">עדיין אין הודעות. התחל לחקור!</p>';
+ $("#msgs").scrollTop=1e9;$("#ci").placeholder=sel===ID?"ענה לשואלים…":`שאל את ${nm}…`;$("#tabc").textContent=any?"חקירות 🔴":"חקירות"}
 function drawMap(){const d=S.s.map;if(!d)return;
- let h='<svg viewBox="0 0 306 306" style="width:100%;max-width:420px;display:block;margin:auto" role="img" aria-label="מפת הזירה">';
- d.cells.forEach((r,i)=>{const x=(i%3)*103,y=Math.floor(i/3)*103,sc=i===d.scene,me=i===d.me,w=r.split(" "),ln=w.length>2?[w[0]+" "+w[1],w.slice(2).join(" ")]:w;
-  h+=`<rect x="${x}" y="${y}" width="100" height="100" rx="10" style="fill:${sc?"var(--no)":"var(--card)"};fill-opacity:${sc?.18:1};stroke:${sc?"var(--no)":me?"var(--ac)":"var(--ln)"};stroke-width:${sc||me?3:1.5}"/>`;
-  if(sc)h+=`<text x="${x+50}" y="${y+20}" style="fill:var(--no)">🔍 זירת הרצח</text>`;
-  ln.forEach((t,k)=>h+=`<text x="${x+50}" y="${y+50+k*16-(ln.length-1)*8}" style="fill:var(--fg)">${esc(t)}</text>`);
-  if(me)h+=`<circle cx="${x+50}" cy="${y+80}" r="12" style="fill:var(--ac)"/><text x="${x+50}" y="${y+84}" style="fill:#fff;font-size:11px">אתה</text>`});
- $("#mapbox").innerHTML=h+`</svg><p style="margin:10px 0 0"><b>הרצח התרחש ${esc(d.sceneFull)}.</b><br>בזמן הרצח (21:45) אתה היית ${esc(d.mineFull)}.</p><p class="mut" style="margin:4px 0 0">רק אתה רואה איפה היית. מיקומם של האחרים נשאר חידה.</p>`}
+ let h='<svg viewBox="-8 -8 416 336" style="width:100%;max-width:460px;display:block;margin:auto" role="img" aria-label="תוכנית הקומה"><defs><pattern id="ht" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="9" style="fill:var(--no);fill-opacity:.28"/></pattern><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0L8,4L0,8z" style="fill:var(--ac)"/></marker></defs>';
+ d.rooms.forEach((r,i)=>{h+=`<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" style="fill:var(--fl);stroke:var(--wl);stroke-width:3"/>`;if(i===d.scene)h+=`<rect x="${r.x+1.5}" y="${r.y+1.5}" width="${r.w-3}" height="${r.h-3}" style="fill:url(#ht);stroke:var(--no);stroke-width:3"/>`});
+ d.doors.forEach(o=>h+=o.v?`<rect x="${o.x-2.5}" y="${o.y-11}" width="5" height="22" style="fill:var(--fl)"/>`:`<rect x="${o.x-11}" y="${o.y-2.5}" width="22" height="5" style="fill:var(--fl)"/>`);
+ d.rooms.forEach((r,i)=>{const sp=r.w<120&&r.label.includes(" "),k=r.label.indexOf(" "),ln=sp?[r.label.slice(0,k),r.label.slice(k+1)]:[r.label];
+  ln.forEach((t,j)=>h+=`<text x="${r.x+r.w/2}" y="${r.y+18+j*14}" style="fill:var(--fg)">${esc(t)}</text>`);
+  if(i===d.scene)h+=`<text x="${r.x+r.w/2}" y="${r.y+18+ln.length*14}" style="fill:var(--no)">🔍 זירת הרצח</text>`});
+ const cn={},ix=[];d.route.forEach(s=>{ix.push(cn[s.room]||0);cn[s.room]=(cn[s.room]||0)+1});
+ const P=d.route.map((s,k)=>{const r=d.rooms[s.room];return{x:r.x+r.w/2+(ix[k]-(cn[s.room]-1)/2)*26,y:r.y+r.h-20}});
+ for(let k=1;k<P.length;k++){if(d.route[k].room===d.route[k-1].room)continue;const a=P[k-1],b=P[k];
+  h+=`<path d="M${a.x} ${a.y} Q${(a.x+b.x)/2+(b.y-a.y)*.18} ${(a.y+b.y)/2-(b.x-a.x)*.18} ${b.x} ${b.y}" style="fill:none;stroke:var(--ac);stroke-width:2;stroke-dasharray:5 4" marker-end="url(#ar)"/>`}
+ P.forEach((q,k)=>h+=`<circle cx="${q.x}" cy="${q.y}" r="11" style="fill:var(--ac);stroke:var(--card);stroke-width:2"/><text x="${q.x}" y="${q.y+4}" style="fill:#fff">${k+1}</text>`);
+ $("#mapbox").innerHTML=h+`</svg><h4>המסלול שלך</h4>`+d.route.map((s,k)=>`<div class="pr"><span class="num">${k+1}</span><span class="n"><b>${s.t}</b> ${esc(s.full)}<br><span class="mut">${s.saw.length?"ראית: "+s.saw.map(esc).join(", "):"לא ראית אף אחד"}</span></span></div>`).join("")+
+ `<p style="margin:10px 0 0"><b>הרצח התרחש ${esc(d.sceneFull)}.</b><br>בזמן הרצח (21:45) אתה היית ${esc(d.mineFull)}.</p><p class="mut" style="margin:4px 0 0">רק אתה רואה את המסלול שלך.</p>`}
 const marks=()=>{try{return JSON.parse(L("mm-sus-"+S.code)||"{}")}catch(e){return{}}};
 function setMark(i){const m=marks();m[i]=!m[i];L("mm-sus-"+S.code,JSON.stringify(m));drawBoard()}
 function drawBoard(){const m=S.s;if(!m||!m.roster)return;const mk=marks(),mine=m.myVote,can=!mine&&S.ph.p==="play";
@@ -88,15 +124,20 @@ function tick(){const m=S.s;if(!m||m.status!=="playing"||!m.roster)return;const 
  const r=m.result;if(!r){ov.innerHTML='<p class="mut" style="text-align:center;margin-top:30vh">טוען תוצאות…</p>';return}
  ov.innerHTML=(r.none?`<div class="big no">אף אחד לא הצביע</div>`:`<p class="mut" style="text-align:center">הנאשם לפי רוב הקולות:</p><div class="big ${r.ok?"ok":"no"}">${r.top.map(esc).join(" / ")}</div><p style="text-align:center">${r.ok?"✔ צדקתם! הרוצח נתפס.":"✘ טעיתם. הרוצח ברח."}</p>`)+
  `<div class="card"><h3>מי הצביע על מי</h3>${r.votes.map(v=>`<div class="pr"><span class="n">${esc(v.name)}</span>${v.target?"← "+esc(v.target):'<span class="mut">לא הצביע</span>'}</div>`).join("")}</div>`+
- (r.ok?"":`<div class="card kill"><h3>הרוצח האמיתי: ${esc(r.killer)}</h3>${r.killerStory}</div>`)}
-document.addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
+ (r.ok?"":`<div class="card kill story" style="margin-top:8px"><h3>הרוצח האמיתי: ${esc(r.killer)}</h3>${r.killerStory}</div>`)+
+ `<button class="p" data-act="home" style="width:100%;margin-top:10px">🏠 משחק חדש</button>`}
+document.addEventListener("click",async e=>{audio();const b=e.target.closest("button");if(!b)return;const a=b.dataset.act;
+ if(a==="back")return arm(b);if(a==="home")return goHome();
+ if(a==="help")return $("#hp").classList.remove("hide");if(a==="closehelp")return $("#hp").classList.add("hide");
+ if(a==="bell"){S.mute=!S.mute;b.textContent=S.mute?"🔕":"🔔";return}
  if(b.dataset.t){S.tab=b.dataset.t;document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x===b));
-  ["c","s","m","b"].forEach(t=>$("#p"+t).classList.toggle("hide",t!==S.tab))}
+  ["c","s","m","b"].forEach(t=>$("#p"+t).classList.toggle("hide",t!==S.tab));if(S.tab==="c"&&S.s)drawThreads()}
+ if(b.dataset.th){S.th=b.dataset.th;drawThreads()}
  if(b.dataset.m)setMark(b.dataset.m);
  if(b.dataset.v){if(S.pend!==b.dataset.v){S.pend=b.dataset.v;drawBoard();return}
   const t=S.pend;S.pend=null;try{await API("/api/vote",{code:S.code,target:t})}catch(x){}}});
-$("#join").onclick=()=>enter(false);$("#new").onclick=()=>enter(true);
-$("#cs").onclick=async()=>{const i=$("#ci"),t=i.value.trim();if(!t)return;i.value="";try{await API("/api/chat",{code:S.code,text:t})}catch(e){}};
+$("#join").onclick=()=>enter("join");$("#new").onclick=()=>enter("new");$("#test").onclick=()=>enter("test");
+$("#cs").onclick=async()=>{const i=$("#ci"),t=i.value.trim();if(!t||!S.th)return;i.value="";try{await API("/api/chat",{code:S.code,to:S.th,text:t})}catch(e){}};
 $("#ci").onkeydown=e=>{if(e.key==="Enter")$("#cs").click()};
 $("#start").onclick=()=>API("/api/start",{code:S.code}).catch(e=>err(e.message));
 $("#notes").oninput=()=>{clearTimeout(window._nt);window._nt=setTimeout(()=>L("mm-note-"+S.code+ID,$("#notes").value),400)};

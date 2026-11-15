@@ -1,8 +1,8 @@
 const http=require("http"),fs=require("fs"),path=require("path");
 const PORT=process.env.PORT||3000,DUR=20*60e3;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const T=["20:30","21:00","21:30"];
-const ACT=["קראת עיתון","הכנת לעצמך תה","דיברת בטלפון","בדקת הודעות","הסתכלת בתמונות שעל הקירות","סידרת את הדברים שלך","הקשבת למוזיקה","הכנת כריך"];
+const T=["20:00","20:30","21:00","21:30"];
+const ACT=[["קראת עיתון","קריאת עיתון"],["הכנת לעצמך תה","הכנת תה"],["דיברת בטלפון","שיחת טלפון"],["בדקת הודעות","בדיקת הודעות"],["הסתכלת בתמונות שעל הקירות","התבוננות בתמונות"],["סידרת את הדברים שלך","סידור חפצים"],["הקשבת למוזיקה","האזנה למוזיקה"],["הכנת כריך","הכנת כריך"]];
 const R8=["בסלון","במטבח","בספרייה","בחדר האוכל","במרפסת","במרתף","בחדר המוזיקה","במסדרון"];
 const SC=[
 {n:"אחוזת הברון",i:"ערב גאלה באחוזה הכפרית של משפחת פון שטיין. סופה ניתקה את הדרך והאורחים נשארו ללון.",v:["הברון פון שטיין","הברונית אסתר","המשרת הראשי יעקב"],w:["פמוט כסף כבד","פסל ברונזה","מפתח ברגים ישן","כבל של מנורה","סכין לפתיחת מכתבים"],r:R8,near:["בספרייה","במסדרון"],s:"בחדר העבודה",x:"דרך החלון אל המרפסת"},
@@ -17,22 +17,45 @@ const SC=[
 {n:"תחנת החלל",i:"תחנת חלל קטנה במסלול סביב כדור הארץ. תקלת תקשורת ניתקה אותה מהבקרה.",v:["המפקד סורוב","המהנדסת ליה","רופא התחנה"],w:["מפתח שרשרת כבד","צינור כיבוי","כלי מדידה כבד","כבל חשמל","מנעול כבד"],r:["במעבדה","במודול המגורים","במטבחון","בחדר הכושר","בחדר השליטה","במנעול האוויר","בחדר החשמל","במעבר הראשי"],near:["במעבר הראשי","בחדר השליטה"],s:"בתא המפקד",x:"דרך פתח התחזוקה"}];
 function rng(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}let a=h>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 
-function build(g){const R=rng(g.seed),ids=g.roster,pk=a=>a[Math.floor(R()*a.length)],sc=SC[Math.floor(R()*SC.length)];
- const k=ids[Math.floor(R()*ids.length)],victim=pk(sc.v),weap=pk(sc.w),pos={},act={};
- ids.forEach(i=>{pos[i]=[pk(sc.r),pk(sc.r),i===k?sc.s:pk(sc.r)];act[i]=[pk(ACT),pk(ACT),pk(ACT)]});
- const oth=ids.filter(i=>i!==k),w=oth[Math.floor(R()*oth.length)];pos[w][1]=pos[k][1];pos[w][2]=pk(sc.near);
- return{sc,k,victim,weap,pos,act,w,fake:pk(sc.r)}}
-function layout(sc){const o=sc.r.filter(r=>!sc.near.includes(r)),c=Array(9);c[4]=sc.s;c[1]=sc.near[0];c[3]=sc.near[1];[0,2,5,6,7,8].forEach((k,i)=>c[k]=o[i]);return c}
+const REL=["שותף עסקי","קרוב משפחה","חבר ותיק","עובד ותיק","אורח בפעם הראשונה","שכן ותיק"];
+const SEC=["אתה חייב כסף לקורבן ועוד לא סיפרת לאיש.","בשעות האלה התכתבת בסתר עם מישהו שאסור לך לדבר איתו.","חיטטת בחפצים של אורח אחר ונבהלת כששמעת מישהו מתקרב.","רצית לעזוב את האירוע מוקדם ופחדת שזה ייראה חשוד."];
+const MOT=["החוב שלו הרס אותך כלכלית.","הוא איים לחשוף סוד שלך ברבים.","הוא לקח ממך ירושה שהגיעה לך.","הוא הלשין עליך ופגע בקריירה שלך."];
+const DET=["האוויר היה חם ומעט מחניק.","נשמעה מוזיקה חלשה ממקום רחוק.","האור היה עמום ונעים.","עמד שם ריח של קפה טרי.","שמעת צעדים כבדים בחדר סמוך.","הרצפה חרקה מתחת לרגליך.","מישהו צחק בקול מהקומה הסמוכה.","הרגשת משב רוח קר מהחלון."];
+const TPL=[
+{r:[[0,0,130,100],[130,0,140,100],[270,0,130,100],[0,100,130,120],[130,100,140,120],[270,100,130,120],[0,220,130,100],[130,220,140,100],[270,220,130,100]],s:4},
+{r:[[0,0,100,100],[100,0,100,100],[200,0,100,100],[300,0,100,100],[0,100,400,110],[0,210,100,110],[100,210,100,110],[200,210,100,110],[300,210,100,110]],s:2},
+{r:[[0,0,120,107],[0,107,120,107],[0,214,120,106],[120,0,140,160],[120,160,140,160],[260,0,140,80],[260,80,140,80],[260,160,140,80],[260,240,140,80]],s:3},
+{r:[[0,0,80,140],[80,0,80,140],[160,0,80,140],[240,0,80,140],[320,0,80,140],[0,140,100,180],[100,140,100,180],[200,140,100,180],[300,140,100,180]],s:6}];
+function adj(a,b){const ox=Math.min(a[0]+a[2],b[0]+b[2])-Math.max(a[0],b[0]),oy=Math.min(a[1]+a[3],b[1]+b[3])-Math.max(a[1],b[1]);
+ if((a[0]+a[2]===b[0]||b[0]+b[2]===a[0])&&oy>=30)return{x:a[0]+a[2]===b[0]?b[0]:a[0],y:Math.max(a[1],b[1])+oy/2,v:1};
+ if((a[1]+a[3]===b[1]||b[1]+b[3]===a[1])&&ox>=30)return{x:Math.max(a[0],b[0])+ox/2,y:a[1]+a[3]===b[1]?b[1]:a[1],v:0};return null}
+function build(g){const R=rng(g.seed),ids=g.roster,pk=a=>a[Math.floor(R()*a.length)],sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+ const si=Math.floor(R()*SC.length),ti=Math.floor(R()*TPL.length),sc=SC[g.scIdx!=null?g.scIdx:si],tpl=TPL[g.tplIdx!=null?g.tplIdx:ti];
+ const k=g.forceKiller||ids[Math.floor(R()*ids.length)],victim=pk(sc.v),weap=pk(sc.w),mot=pk(MOT),pos={},act={},det={},rel={},sec={};
+ ids.forEach(i=>{pos[i]=[pk(sc.r),pk(sc.r),pk(sc.r),i===k?sc.s:pk(sc.r)];act[i]=[0,1,2,3].map(()=>pk(ACT));det[i]=[0,1,2,3].map(()=>pk(DET));rel[i]=pk(REL);sec[i]=pk(SEC)});
+ const oth=ids.filter(i=>i!==k),w=oth[Math.floor(R()*oth.length)];pos[w][2]=pos[k][2];pos[w][3]=pk(sc.near);
+ const all=tpl.r.map((r,i)=>i),nb=sh(all.filter(i=>i!==tpl.s&&adj(tpl.r[tpl.s],tpl.r[i]))),ns=nb.slice(0,2),rest=sh(all.filter(i=>i!==tpl.s&&!ns.includes(i))),others=sh(sc.r.filter(r=>!sc.near.includes(r))),layout=Array(9);
+ layout[tpl.s]=sc.s;layout[ns[0]]=sc.near[0];layout[ns[1]]=sc.near[1];rest.forEach((x,i)=>layout[x]=others[i]);
+ return{sc,tpl,k,victim,weap,mot,pos,act,det,rel,sec,w,fake:pk(sc.r),layout}}
 const lab=r=>r.replace(/^ב(?!ין)/,"");
-function story(g,me){const B=g.B,N=g.names,sc=B.sc,isK=B.k===me,p=B.pos[me],a=B.act[me],o=[];
+function story(g,me){const B=g.B,N=g.names,sc=B.sc,isK=B.k===me,p=B.pos[me],a=B.act[me],d=B.det[me],nm=i=>esc(N[i]),o=[];
  o.push(`<h3>${sc.n}</h3><p>${sc.i} הלילה נרצח <b>${B.victim}</b>. גופתו נמצאה ב־22:00 ${sc.s}. כל הנוכחים חשודים, ואתם האחרונים שנשארו שם.</p>`);
- if(isK)o.push(`<div class="card kill"><b>🔪 אתה הרוצח.</b><p>ב־21:30 נכנסת בשקט ${sc.s}. ${B.victim} היה שקוע בענייניו. ב־21:45 הרמת את <b>${B.weap}</b>, פעלת מהר, ניגבת טביעות ויצאת ${sc.x}.</p><p>הסיפור המכסה שלך: “ב־21:30 הייתי ${B.fake}”. שים לב: אם מישהו היה שם באמת, הוא יגלה את השקר. ייתכן שמישהו ראה אותך ב־21:00. אל תכחיש הכול, ופנה חשד למי שהיה קרוב ל${lab(sc.s)}.</p></div>`);
- [0,1,2].forEach(s=>{const pr=g.roster.filter(i=>i!==me&&B.pos[i][s]===p[s]).map(i=>esc(N[i]));
-  o.push(`<p><b>⏰ ${T[s]}</b> — היית ${p[s]}. ${isK&&s===2?"עשית את מה שבאת לעשות.":a[s]+"."} ${pr.length?"ראית שם את: "+pr.join(", ")+".":"לא ראית שם אף אחד."}</p>`)});
+ o.push(`<p><b>מי אתה:</b> אתה ${B.rel[me]} של ${B.victim}.${isK?"":" <b>הסוד שלך:</b> "+B.sec[me]+" אתה לא חייב לספר אותו, אבל הוא עלול לגרום לך להיראות חשוד."}</p>`);
+ if(isK)o.push(`<div class="card kill"><b>🔪 אתה הרוצח.</b><p><b>המניע:</b> ${B.mot}</p><p><b>התוכנית:</b> ב־21:30 נכנסת בשקט ${sc.s}, שם ${B.victim} היה שקוע בענייניו. ב־21:45 הרמת את <b>${B.weap}</b>, פעלת מהר, ניגבת טביעות ויצאת ${sc.x}.</p><p><b>הסיפור המכסה:</b> “ב־21:30 הייתי ${B.fake}”. שים לב: אם מישהו היה שם באמת, הוא יגלה את השקר. ייתכן שמישהו ראה אותך ב־21:00. אל תכחיש הכול, ופנה חשד למי שהיה קרוב ל${lab(sc.s)}.</p></div>`);
+ o.push(`<p><b>המסלול שלך:</b> ${p.map((r,s)=>T[s]+" "+lab(r)).join(" ← ")}</p>`);
+ [0,1,2,3].forEach(s=>{const here=p[s],prev=s?p[s-1]:null,pr=g.roster.filter(i=>i!==me&&B.pos[i][s]===here);
+  let t=`<p><b>⏰ ${T[s]}</b> — `+(s===0?`הגעת ${here}. `:here===prev?`נשארת ${here}. `:`עברת מ${lab(prev)} אל ${here}. `);
+  if(isK&&s===3)t+=`נכנסת בשקט, שם ${B.victim} היה שקוע בענייניו, ונשארת שם עד 21:45. `;
+  else{t+=`${a[s][0]}. ${d[s]} `;t+=pr.length?"ראית שם: "+pr.map(i=>`${nm(i)} (בזמן ${B.act[i][s][1]})`).join(", ")+".":"לא ראית שם אף אחד."}
+  o.push(t+"</p>")});
  if(me===B.w)o.push(`<p>ב־21:00 הבחנת שאחד מהנוכחים הסתיר משהו עטוף במטפחת. אולי זה היה <b>${B.weap}</b>.</p>`);
- if(!isK)o.push(`<p>${sc.near.includes(p[2])?"ב־21:45 שמעת בום חזק וצעקה קצרה מכיוון "+lab(sc.s)+".":"ב־21:45 שמעת מרחוק צעקה עמומה, ולא הצלחת להבין מאיפה."}</p>`);
+ if(!isK)o.push(`<p><b>⏰ 21:45</b> — ${sc.near.includes(p[3])?"שמעת בום חזק וצעקה קצרה מכיוון "+lab(sc.s)+".":"שמעת מרחוק צעקה עמומה, ולא הצלחת להבין מאיפה."}</p>`);
+ o.push(`<p class="mut">רמז: בלשונית “חקירות” אפשר לשאול כל שחקן איפה היה ואת מי ראה, ולהשוות לסיפור שלך.</p>`);
  return o.join("")}
-function mapData(g,me){const B=g.B,c=layout(B.sc),mine=B.pos[me][2];return{cells:c.map(lab),scene:4,me:c.indexOf(mine),sceneFull:B.sc.s,mineFull:mine}}
+function mapData(g,me){const B=g.B,nm=B.layout,rs=B.tpl.r,doors=[];
+ rs.forEach((r,i)=>rs.forEach((q,j)=>{if(j>i){const d=adj(r,q);if(d)doors.push(d)}}));
+ return{rooms:rs.map((r,i)=>({x:r[0],y:r[1],w:r[2],h:r[3],label:lab(nm[i])})),doors,scene:B.tpl.s,sceneFull:B.sc.s,mineFull:B.pos[me][3],
+  route:[0,1,2,3].map(s=>({t:T[s],room:nm.indexOf(B.pos[me][s]),full:B.pos[me][s],saw:g.roster.filter(i=>i!==me&&B.pos[i][s]===B.pos[me][s]).map(i=>g.names[i])}))}}
 function phase(g){if(g.status!=="playing")return{p:"lobby"};const now=Date.now(),dl=g.startedAt+DUR,ids=g.roster,all=ids.every(i=>g.votes[i]);
  const R=all?Math.max(...ids.map(i=>g.votes[i].t)):dl;if(!all&&now<dl)return{p:"play",left:dl-now};const e=now-R;
  return e<10000?{p:"count",n:10-Math.floor(e/1000)}:{p:"res"}}
@@ -40,7 +63,7 @@ function result(g){const cnt={};Object.values(g.votes).forEach(v=>cnt[v.target]=
  const mx=Math.max(0,...Object.values(cnt)),top=Object.keys(cnt).filter(i=>cnt[i]===mx),ok=mx>0&&top.length===1&&top[0]===g.B.k;
  return{none:!mx,ok,top:top.map(i=>g.names[i]),killer:g.names[g.B.k],killerStory:ok?"":story(g,g.B.k),
   votes:g.roster.map(i=>({name:g.names[i],target:g.votes[i]?g.names[g.votes[i].target]:null}))}}
-function view(g,id){const o={code:g.code,status:g.status,host:g.host,me:id,phase:phase(g),chat:g.chat.slice(-200),players:[...g.players].map(([i,n])=>({id:i,name:n}))};
+function view(g,id){const o={code:g.code,status:g.status,host:g.host,me:id,phase:phase(g),chat:g.chat.slice(-400),players:[...g.players].map(([i,n])=>({id:i,name:n}))};
  if(g.status==="playing"&&g.roster.includes(id)){o.story=story(g,id);o.map=mapData(g,id);o.roster=g.roster.map(i=>({id:i,name:g.names[i]}));
   o.voted=Object.keys(g.votes);o.myVote=g.votes[id]?g.votes[id].target:null;if(o.phase.p==="res")o.result=result(g)}
  return o}
@@ -62,11 +85,15 @@ http.createServer(async(req,res)=>{const u=new URL(req.url,"http://x");
  const b=await body(req),id=String(b.id||"").slice(0,64),name=clean(b.name);if(!id)return fail(res,400,"חסר מזהה");
  if(u.pathname==="/api/new"){if(!name)return fail(res,400,"הכנס שם");let code;do code=String(1000+Math.floor(Math.random()*9000));while(games.has(code));
   games.set(code,{code,host:id,status:"lobby",players:new Map([[id,name]]),chat:[],votes:{},clients:new Set(),created:Date.now()});return ok(res,{code})}
+ if(u.pathname==="/api/test"){if(!name)return fail(res,400,"הכנס שם");let code;do code=String(1000+Math.floor(Math.random()*9000));while(games.has(code));
+  const g={code,host:id,status:"playing",test:1,players:new Map([[id,name],["bot1","בוט א׳"],["bot2","בוט ב׳"]]),chat:[],votes:{},clients:new Set(),created:Date.now()};
+  g.roster=[...g.players.keys()].sort();g.names=Object.fromEntries(g.players);g.seed="test";g.scIdx=0;g.tplIdx=0;g.forceKiller=id;g.B=build(g);g.startedAt=Date.now();
+  ["bot1","bot2"].forEach(x=>g.votes[x]={target:id,t:Date.now()});games.set(code,g);return ok(res,{code})}
  const g=games.get(String(b.code||""));if(!g)return fail(res,404,"קוד לא נמצא");
  if(u.pathname==="/api/join"){if(!g.players.has(id)){if(g.status!=="lobby")return fail(res,403,"המשחק כבר התחיל והכניסה נעולה");
    if(!name)return fail(res,400,"הכנס שם");if(g.players.size>=12)return fail(res,403,"המשחק מלא");g.players.set(id,name);push(g)}return ok(res,{code:g.code})}
  if(!g.players.has(id))return fail(res,403,"אינך במשחק");
- if(u.pathname==="/api/chat"){const t=String(b.text||"").trim().slice(0,300);if(t){g.chat.push({uid:id,name:g.players.get(id),text:t,t:Date.now()});if(g.chat.length>300)g.chat.shift();push(g)}return ok(res)}
+ if(u.pathname==="/api/chat"){const t=String(b.text||"").trim().slice(0,300),to=String(b.to||"");if(t&&g.players.has(to)){g.chat.push({uid:id,to,name:g.players.get(id),text:t,t:Date.now()});if(g.chat.length>600)g.chat.shift();push(g)}return ok(res)}
  if(u.pathname==="/api/start"){if(g.host!==id||g.status!=="lobby"||g.players.size<3)return fail(res,400,"אי אפשר להתחיל");
   g.roster=[...g.players.keys()].sort();g.names=Object.fromEntries(g.players);g.seed=Math.random().toString(36).slice(2)+Date.now();
   g.B=build(g);g.startedAt=Date.now();g.status="playing";push(g);return ok(res)}
