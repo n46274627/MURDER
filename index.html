@@ -1,146 +1,770 @@
-<!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>תעלומת רצח</title>
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>זהות כפולה – ניחוש אישיות</title>
 <style>
-:root{--bg:#faf7f2;--fg:#1d1a16;--card:#fff;--mut:#7a7167;--ac:#8b2d2d;--ln:#e4ddd2;--ok:#1f8a4c;--no:#c23030;--fl:#f4eee3;--wl:#5b4f42;--rb:#fde8e8;--rt:#7a1f1f;--rbd:#e9b4b4;--gb:#e3f5ea;--gt:#145c33;--gbd:#a9d9bc;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#17140f;--fg:#efe9df;--card:#221e18;--mut:#a39a8d;--ac:#d86a6a;--ln:#38322a;--fl:#2a251d;--wl:#b8ad9c;--rb:#3a1f1f;--rt:#f3b6b6;--rbd:#6a3030;--gb:#1d3626;--gt:#a8e6c0;--gbd:#2f6a45;color-scheme:dark}}
-html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,"Segoe UI",Arial,sans-serif}
-#app{max-width:640px;margin:auto;height:100%;display:flex;flex-direction:column;padding:10px;box-sizing:border-box;gap:8px}
-.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:12px}
-h1{margin:6px 0;font-size:24px;color:var(--ac)}h3{margin:0 0 6px}h4{margin:12px 0 4px;color:var(--ac)}
-input,button,textarea{font:inherit;border-radius:10px;border:1px solid var(--ln);padding:10px;background:var(--card);color:var(--fg)}
-button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}button:disabled{opacity:.45;cursor:default}
-.row{display:flex;gap:8px}.row>input{flex:1;min-width:0}
-.hide{display:none!important}.mut{color:var(--mut);font-size:14px}.err{color:var(--no)}
-#bar{display:flex;gap:8px;align-items:center;font-weight:600}#bar span{flex:1}#bar button{padding:6px 10px}
-#tm{font-variant-numeric:tabular-nums;color:var(--ac);font-size:20px;flex:0!important}
-#tabs{display:flex;gap:6px}#tabs button{flex:1;padding:8px 4px}#tabs .on{background:var(--ac);color:#fff;border-color:var(--ac)}
-.panel{flex:1;min-height:0;overflow:auto}
-#pc{display:flex;flex-direction:column;gap:8px}#msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:5px}
-#chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}.chip{white-space:nowrap;padding:6px 12px;border-radius:20px}.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}.dot2{color:var(--no)}
-.b{border-radius:10px;padding:6px 10px;border:1px solid}.b.r{background:var(--rb);color:var(--rt);border-color:var(--rbd)}.b.g{background:var(--gb);color:var(--gt);border-color:var(--gbd)}
-.story p{margin:0 0 10px}.kill{border-color:var(--no);border-width:2px}
-.pr{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--ln)}.pr .n{flex:1}.pr.clr .n{text-decoration:line-through;color:var(--mut)}
-.big{font-size:34px;text-align:center;font-weight:700;padding:18px;border-radius:12px;color:#fff;margin:8px 0}
-.ok{background:var(--ok)}.no{background:var(--no)}
-.ovl{position:fixed;inset:0;background:var(--bg);overflow:auto;padding:16px;z-index:5;box-sizing:border-box}
-.cnt{font-size:96px;text-align:center;color:var(--ac);font-weight:700;margin-top:20vh}
-textarea{width:100%;min-height:150px;box-sizing:border-box;resize:vertical}
-#mapbox svg text{font:600 12px system-ui,Arial,sans-serif;text-anchor:middle}
-.num{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--ac);color:#fff;align-items:center;justify-content:center;font-size:12px;flex:none}
-#hp p,#hp li{margin:0 0 6px}#hp ul{margin:0 0 8px;padding-inline-start:20px}.ex{background:var(--bg);border:1px dashed var(--ln);border-radius:8px;padding:6px 10px;margin:4px 0}
-</style></head><body><div id="app">
-<div id="v-in" class="card"><h1>🕵️ תעלומת רצח</h1>
-<p class="mut">מישהו בחדר הוא הרוצח. קראו את הסיפור האישי שלכם, חקרו כל שחקן בנפרד, והצביעו.</p>
-<div class="row" style="margin-bottom:8px"><input id="nm" placeholder="השם שלך" maxlength="16"></div>
-<div class="row"><input id="cd" placeholder="קוד משחק" inputmode="numeric" maxlength="4"><button class="p" id="join">הצטרף</button></div>
-<div class="row" style="margin-top:8px"><button id="new" style="flex:1">פתח משחק חדש</button><button id="test" style="flex:1">🧪 בדיקת משחק</button></div>
-<div style="margin-top:8px"><button data-act="help">📖 הוראות מפורטות</button></div><p id="er" class="err"></p></div>
+:root {
+  --bg:#0b1220;
+  --panel:#172338;
+  --panel2:#20304b;
+  --line:#344762;
+  --text:#f5f7fb;
+  --muted:#aab8ca;
+  --green:#20c56b;
+  --red:#ed5555;
+  --blue:#679cff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(145deg,#101c32,#080d18);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{
+  border:0;border-radius:12px;padding:12px 16px;
+  background:#3979e8;color:white;font-weight:bold;cursor:pointer;
+}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.secondary{background:#34445f}
+button.green{background:#168b4d}
+button.red{background:#b93737}
+input,textarea,select{
+  width:100%;background:#0d182b;color:white;
+  border:1px solid var(--line);border-radius:11px;
+  padding:13px;outline:none;
+}
+textarea{resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--blue)}
+label{font-size:14px;color:#c7d4e7}
+.wrap{max-width:1250px;margin:auto;padding:20px}
+header{text-align:center;margin:15px 0 25px}
+header h1{font-size:clamp(30px,5vw,46px);margin:0}
+header p{color:var(--muted)}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:17px;padding:17px;margin-bottom:14px;
+  box-shadow:0 10px 25px #0003;
+}
+.center{max-width:570px;margin:20px auto}
+.col{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.row>*{min-width:0}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.code{font-size:30px;letter-spacing:5px;color:#9ec2ff;font-weight:900}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:8px 12px;border-radius:30px;background:#293c5b;border:1px solid #435a7d}
+.layout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.full{grid-column:1/-1}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.section-title h3{margin:0}
+.turn-banner{
+  background:#0d6939;border:2px solid #26dc7a;
+  box-shadow:0 0 25px #20c56b77;
+  border-radius:15px;padding:17px;text-align:center;
+  font-size:25px;font-weight:900;margin-bottom:14px;
+  animation:pulse 1.4s infinite;
+}
+@keyframes pulse{50%{box-shadow:0 0 35px #20c56baa}}
+.turn-area{border:2px solid var(--green);box-shadow:0 0 20px #20c56b44}
+.question{
+  background:#e5e7eb;color:#202632;border-radius:12px;
+  padding:13px;margin:9px 0;
+}
+.question small{display:block;color:#626c7a;margin-bottom:5px}
+.question.yes{background:#b9f5ca}
+.question.no{background:#ffc7c7}
+.known-item{
+  background:#16442f;border:1px solid #278957;
+  padding:10px;border-radius:10px;margin:7px 0;
+}
+.chatlog{
+  height:260px;overflow:auto;background:#0d182b;
+  border-radius:11px;padding:10px;
+}
+.chat-message{padding:7px 3px;border-bottom:1px solid #293a54;overflow-wrap:anywhere}
+.chat-message b{color:#9fc2ff}
+.guess-row{
+  display:grid;grid-template-columns:1fr 1.3fr auto;
+  gap:8px;align-items:center;margin:9px 0;
+}
+.timer{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums}
+.overlay{
+  position:fixed;inset:0;background:#020817ed;
+  z-index:10;display:flex;align-items:center;
+  justify-content:center;padding:18px;
+}
+.overlay-card{
+  width:min(720px,100%);background:#f2f5fa;color:#182235;
+  padding:27px;border-radius:22px;text-align:center;
+  box-shadow:0 20px 80px #0009;
+}
+.overlay-card h2{font-size:clamp(25px,5vw,40px)}
+.answer-buttons{display:flex;gap:14px;justify-content:center}
+.answer-buttons button{min-width:125px;font-size:23px;padding:17px}
+.score{font-size:27px;color:#9fc1ff;font-weight:900}
+.rank{padding:13px;border-bottom:1px solid var(--line);font-size:19px}
+.rank:first-child{font-size:28px;color:#ffda72}
+.help-item{padding:13px 0;border-bottom:1px solid var(--line)}
+.demo{
+  padding:13px;background:#0c172a;border:1px dashed #617797;
+  border-radius:12px;margin-top:10px;
+}
+.demo-box{background:#e5e7eb;color:#1c2635;padding:12px;border-radius:10px}
+@media(max-width:900px){.layout{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){
+  .wrap{padding:11px}
+  .layout{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .guess-row{grid-template-columns:1fr}
+  .timer{font-size:24px}
+}
+</style>
+</head>
 
-<div id="v-wait" class="card hide"><h3>חדר המתנה</h3><p>קוד המשחק: <b id="wc" style="font-size:28px"></b></p>
-<div id="wl"></div><p class="mut" id="wh"></p><div class="row"><button class="p hide" id="start" style="flex:1">התחל משחק (נועל כניסה)</button><button data-act="help">📖 הוראות</button><button data-act="home">🏠 חזרה</button></div></div>
+<body>
+<div class="wrap">
 
-<div id="v-g" class="hide" style="display:flex;flex-direction:column;gap:8px;flex:1;min-height:0">
-<div id="bar" class="card"><button data-act="back">🏠 חזרה</button><span id="ph"></span><span id="tm"></span><button data-act="bell" id="bell">🔔</button></div>
-<div id="tabs"><button data-t="c" class="on" id="tabc">חקירות</button><button data-t="s">התיק שלי</button><button data-t="m">מפה</button><button data-t="b">חשודים</button></div>
-<div id="pc" class="panel"><div id="chips"></div><div id="thh" class="mut"></div><div id="msgs"></div><div class="row"><input id="ci" placeholder="כתוב הודעה…" maxlength="300"><button class="p" id="cs">שלח</button></div></div>
-<div id="ps" class="panel story hide"></div>
-<div id="pm" class="panel hide"><div class="card"><div id="mapbox"></div></div><div class="card" style="margin-top:8px"><h3>הפתקים שלי</h3><p class="mut">אזור פרטי שרק אתה רואה. רשום כאן רמזים, חשדות וסתירות.</p><textarea id="notes" placeholder="הפתקים שלך…"></textarea></div></div>
-<div id="pb" class="panel hide"></div></div>
-<div id="ov" class="ovl hide"></div>
-<div id="hp" class="ovl hide"><div class="card">
-<h3>📖 איך משחקים</h3>
-<h4>המטרה</h4><p>אחד השחקנים (נבחר אקראית) רצח את הקורבן. כולם מקבלים סיפור אישי. החפים צריכים לגלות מי הרוצח, והרוצח צריך להסתיר את זה. יש 20 דקות.</p>
-<h4>איך מתחילים</h4><ul><li>הקלידו שם. אחד לוחץ <b>פתח משחק חדש</b> ומקבל קוד בן 4 ספרות.</li><li>השאר מקלידים שם וקוד ולוחצים <b>הצטרף</b>.</li><li>כשיש לפחות 3 שחקנים, המארח לוחץ <b>התחל</b>. אחרי זה הכניסה ננעלת.</li><li>רוצים רק להתנסות לבד? לחצו <b>בדיקת משחק</b>: תקבלו משחק עם שני שחקני דמה שמצביעים עליכם מיד. המפה והתסריט זהים בכל בדיקה.</li></ul>
-<h4>לשונית “התיק שלי”</h4><p>הסיפור הפרטי שלכם: מי אתם, מה הסוד שלכם, והמסלול שלכם בכל שעה (20:00, 20:30, 21:00, 21:30), עם מי שראיתם ומה הם עשו. רק אתם רואים אותו.</p>
-<h4>לשונית “מפה”</h4><p>תוכנית הקומה של המקום. חדר הרצח מסומן באדום. המספרים 1 עד 4 הם המסלול שלכם לפי השעות. מתחת למפה רשימה של מי שראיתם בכל שעה. מתחתיה אזור פתקים פרטי.</p>
-<h4>לשונית “חקירות”</h4><p>לכל שחקן יש חדר חקירה משלו, וכולם רואים את כל החדרים. שאלות של אחרים מופיעות <b style="color:var(--no)">באדום</b> והתשובות של השחקן עצמו <b style="color:var(--ok)">בירוק</b>. כשמישהו כותב בחדר שלכם, תשמעו צלצול ותראו נקודה אדומה.</p>
-<div class="ex"><b>דוגמה, חדר החקירה של איתמר:</b><br>🔴 דנה: איפה היית ב־21:30?<br>🟢 איתמר: הייתי בספרייה וקראתי עיתון.<br>🔴 יוסי: ראית מישהו שם?<br>🟢 איתמר: ראיתי את דנה, היא הכינה תה.</div>
-<p><b>רעיון חכם:</b> השוו תשובות. אם איתמר אומר שדנה הייתה בספרייה ב־21:30, ודנה אמרה שהייתה במטבח, מישהו משקר.</p>
-<h4>לשונית “חשודים”</h4><p>כולם חשודים כברירת מחדל. אפשר להסיר חשודים לעצמכם (רק אתם רואים). כשמוכנים, לחצו <b>הצבע</b> ואז שוב לאישור. ההצבעה ננעלת.</p>
-<h4>הסיום</h4><p>כשכולם הצביעו או כשנגמרים 20 הדקות, תהיה ספירה לאחור מ־10 ל־1. אחריה יוצג הנאשם: ירוק אם צדקתם, אדום אם טעיתם. תראו מי הצביע על מי, ואם טעיתם גם מי הרוצח האמיתי וסיפורו. מי שלא הצביע לא נספר.</p>
-<h4>טיפים</h4><ul><li><b>חפים:</b> אל תחשפו את הסוד שלכם בקלות, אבל אל תשקרו על המיקום. חפשו סתירות.</li><li><b>הרוצח:</b> אל תכחישו הכול. השתמשו בסיפור המכסה והפנו חשד לאחרים.</li><li>כפתור <b>🏠 חזרה</b> תמיד זמין כדי להתחיל משחק חדש.</li></ul>
-<button class="p" data-act="closehelp" style="width:100%">הבנתי, סגור</button></div></div>
+<header>
+  <h1>🕵️ זהות כפולה</h1>
+  <p>משחק ניחוש אישיות • 30 דקות • שאלות, חקירה וניחושים</p>
+</header>
+
+<!-- מסך כניסה -->
+<section id="home" class="panel center">
+  <h2>ברוכים הבאים</h2>
+  <p class="muted">צור משחק חדש או הצטרף למשחק קיים.</p>
+
+  <div class="col">
+    <label>השם שלך במשחק</label>
+    <input id="name" maxlength="24" placeholder="השם שלך">
+
+    <button id="create">פתח משחק חדש</button>
+
+    <div class="muted" style="text-align:center">או הצטרף לחדר קיים</div>
+
+    <input id="joinCode" maxlength="8" placeholder="קוד המשחק">
+    <button id="join" class="secondary">הצטרף למשחק</button>
+
+    <button id="openHelp" class="secondary">📖 הוראות המשחק</button>
+    <div id="homeError" class="muted"></div>
+  </div>
+</section>
+
+<!-- חדר המתנה -->
+<section id="lobby" class="hidden">
+  <div class="panel center">
+    <h2>חדר המתנה</h2>
+    <div class="muted">קוד המשחק שלך:</div>
+    <div id="roomCode" class="code"></div>
+    <p class="muted">שלח את הקוד לשאר המשתתפים.</p>
+
+    <div id="lobbyPlayers" class="pills"></div>
+
+    <div class="col" style="margin-top:20px">
+      <label>השם של האישיות שבחרת – זו התשובה הסודית</label>
+      <input id="personality" maxlength="100" placeholder="שם האישיות שבחרת">
+
+      <button id="savePersonality" class="secondary">שמור את האישיות שלי</button>
+      <div id="personalityStatus" class="muted small"></div>
+
+      <button id="start" class="green hidden">התחל משחק</button>
+      <button id="lobbyHelp" class="secondary">📖 הוראות</button>
+      <div id="lobbyError" class="muted"></div>
+    </div>
+  </div>
+</section>
+
+<!-- מסך המשחק -->
+<section id="game" class="hidden">
+
+  <div class="panel row" style="justify-content:space-between">
+    <div>
+      <div class="muted small">קוד משחק</div>
+      <b id="gameCode"></b>
+    </div>
+    <div>
+      <div class="muted small">זמן שנותר</div>
+      <div id="timer" class="timer">30:00</div>
+    </div>
+    <div>
+      <div class="muted small">סיבוב</div>
+      <b id="round">1</b>
+    </div>
+  </div>
+
+  <div id="turnBanner" class="turn-banner hidden">
+    ✨ תורך! בחר שחקן ושאל שאלה
+  </div>
+
+  <div class="layout">
+
+    <!-- משתתפים ותור -->
+    <div class="panel" id="askPanel">
+      <h3>👥 משתתפים</h3>
+      <div id="gamePlayers" class="pills"></div>
+
+      <hr style="border-color:var(--line);margin:18px 0">
+
+      <h3>🎯 שאל שאלה</h3>
+      <div id="askArea" class="col">
+        <label>את מי אתה רוצה לשאול?</label>
+        <select id="askTarget"></select>
+
+        <label>השאלה שלך</label>
+        <textarea id="askText" rows="3" maxlength="240"
+          placeholder="כתוב כאן את השאלה"></textarea>
+
+        <button id="sendQuestion">שלח שאלה</button>
+        <div id="askStatus" class="muted small"></div>
+      </div>
+      <p id="notTurn" class="muted small"></p>
+    </div>
+
+    <!-- שאלות אישיות -->
+    <div class="panel">
+      <h3>📋 השאלות ששאלו אותך</h3>
+      <div id="myQuestions">
+        <p class="muted">עדיין לא שאלו אותך שאלות.</p>
+      </div>
+    </div>
+
+    <!-- פרטים ידועים -->
+    <div class="panel">
+      <h3>🧠 פרטים ידועים</h3>
+      <div id="known"></div>
+    </div>
+
+    <!-- צ'אט -->
+    <div class="panel">
+      <h3>💬 צ'אט פתוח לכולם</h3>
+      <div id="chatlog" class="chatlog"></div>
+      <div class="row" style="margin-top:9px">
+        <input id="chatText" maxlength="500" placeholder="כתוב הודעה...">
+        <button id="sendChat">שלח</button>
+      </div>
+    </div>
+
+    <!-- ניחושים -->
+    <div class="panel">
+      <h3>🔍 ניחוש אישיות</h3>
+      <p class="muted small">
+        יש לך שני ניחושים לכל משתתף. ניחוש נכון סוגר את האפשרות
+        לנחש או לשאול את אותו שחקן.
+      </p>
+      <div id="guessArea"></div>
+      <div id="guessStatus" class="muted small"></div>
+    </div>
+
+    <!-- היסטוריה -->
+    <div class="panel">
+      <h3>📊 הניחושים שלי</h3>
+      <div id="myHistory" class="muted small">עדיין אין ניחושים.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- תוצאות -->
+<section id="results" class="hidden panel center">
+  <h2>🏆 תוצאות המשחק</h2>
+  <div id="winner"></div>
+  <div id="ranking"></div>
+  <button id="showAll" class="green" style="width:100%;margin-top:18px">
+    הבא – הצגת כל הניחושים
+  </button>
+  <div id="allGuesses" class="hidden"></div>
+</section>
+
+<div id="notice" class="muted" style="text-align:center"></div>
 </div>
+
+<!-- חלונית שאלה שקופצת למי שנשאל -->
+<div id="questionOverlay" class="overlay hidden">
+  <div class="overlay-card">
+    <div class="muted">שאלה שהופנתה אליך</div>
+    <h2 id="overlayQuestion"></h2>
+    <p>בחר את התשובה שלך:</p>
+    <div class="answer-buttons">
+      <button id="answerYes" class="green">✓ כן</button>
+      <button id="answerNo" class="red">✕ לא</button>
+    </div>
+  </div>
+</div>
+
+<!-- הוראות והדגמות -->
+<div id="helpOverlay" class="overlay hidden">
+  <div class="overlay-card" style="max-height:90vh;overflow:auto;text-align:right">
+    <div class="section-title">
+      <h2>📖 הוראות המשחק</h2>
+      <button id="closeHelp" class="secondary">סגור</button>
+    </div>
+    <div id="helpContent"></div>
+  </div>
+</div>
+
 <script>
-const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const L=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
-let ID=L("mm-id");if(!ID){ID=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now());L("mm-id",ID)}
-const S={code:"",s:null,ph:{p:"lobby"},tab:"c",th:null,seen:{},pend:null,es:null,mute:false,lastMine:null};
-const API=(p,b)=>fetch(p,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...b,id:ID})}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.e||"שגיאה");return j});
-const err=m=>{$("#er").textContent=m||""};
-const show=v=>["#v-in","#v-wait","#v-g"].forEach(x=>$(x).classList.toggle("hide",x!==v));
-let AC;const audio=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}};
-function beep(){if(S.mute||!AC)return;try{const t=AC.currentTime;[880,1320].forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.connect(g);g.connect(AC.destination);const s=t+i*.16;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.3,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+.3);o.start(s);o.stop(s+.32)})}catch(e){}}
-async function enter(kind){const name=$("#nm").value.trim();if(!name)return err("הכנס שם");L("mm-name",name);err();audio();
- try{const r=await API({new:"/api/new",test:"/api/test",join:"/api/join"}[kind],{name,code:$("#cd").value.trim()});connect(r.code)}catch(e){err(e.message)}}
-function connect(code){S.code=code;S.th=null;S.seen={};S.lastMine=null;L("mm-code",code);$("#notes").value=L("mm-note-"+code+ID)||"";if(S.es)S.es.close();
- const es=S.es=new EventSource(`/api/events?code=${code}&id=${encodeURIComponent(ID)}`);
- es.onmessage=e=>{const m=JSON.parse(e.data);S.ph=m.phase;if(m.tick){tick();return}S.s=m;render()}}
-function goHome(){if(S.es)S.es.close();S.es=null;L("mm-code",null);S.s=null;S.code="";S.th=null;S.seen={};S.lastMine=null;$("#ov").classList.add("hide");show("#v-in");err()}
-let bt;function arm(b){if(b.dataset.arm){delete b.dataset.arm;goHome();return}b.dataset.arm=1;const o=b.textContent;b.textContent="לחץ שוב לאישור";clearTimeout(bt);bt=setTimeout(()=>{delete b.dataset.arm;b.textContent=o},3000)}
-function render(){const m=S.s;if(!m)return;
- if(m.status==="lobby"){show("#v-wait");$("#wc").textContent=m.code;
-  $("#wl").innerHTML=m.players.map(p=>`<div class="pr"><span class="n">${esc(p.name)}${p.id===ID?" (אתה)":""}</span></div>`).join("");
-  const host=m.host===ID;$("#start").classList.toggle("hide",!host);$("#start").disabled=m.players.length<3;
-  $("#wh").textContent=host?(m.players.length<3?"צריך לפחות 3 שחקנים כדי להתחיל.":"כשכולם כאן, התחל. אחרי ההתחלה הכניסה נעולה."):"ממתינים שהמארח יתחיל…";return}
- show("#v-g");const mine=m.chat.filter(c=>c.to===ID&&c.uid!==ID).length;if(S.lastMine!==null&&mine>S.lastMine)beep();S.lastMine=mine;
- $("#ps").innerHTML=m.story||"";drawMap();drawBoard();drawThreads();tick()}
-function drawThreads(){const m=S.s,R=m.roster;if(!R)return;if(!S.th||!R.some(p=>p.id===S.th))S.th=(R.find(p=>p.id!==ID)||R[0]).id;
- const cnt=id=>m.chat.filter(c=>c.to===id).length,sel=S.th;if(S.tab==="c")S.seen[sel]=cnt(sel);let any=false;
- $("#chips").innerHTML=R.map(p=>{const u=(p.id!==sel||S.tab!=="c")&&cnt(p.id)>(S.seen[p.id]||0);if(u)any=true;return `<button class="chip ${p.id===sel?"on":""}" data-th="${p.id}">${esc(p.name)}${p.id===ID?" (אתה)":""}${u?' <span class="dot2">●</span>':""}</button>`}).join("");
- const nm=R.find(p=>p.id===sel).name,ms=m.chat.filter(c=>c.to===sel);
- $("#thh").innerHTML=sel===ID?"החקירה שלך: אחרים שואלים אותך (באדום) ואתה עונה (בירוק)":`חקירה של <b>${esc(nm)}</b>: שאלות באדום, תשובות שלו בירוק`;
- $("#msgs").innerHTML=ms.map(c=>`<div class="b ${c.uid===sel?"g":"r"}"><b>${esc(c.name)}:</b> ${esc(c.text)}</div>`).join("")||'<p class="mut">עדיין אין הודעות. התחל לחקור!</p>';
- $("#msgs").scrollTop=1e9;$("#ci").placeholder=sel===ID?"ענה לשואלים…":`שאל את ${nm}…`;$("#tabc").textContent=any?"חקירות 🔴":"חקירות"}
-function drawMap(){const d=S.s.map;if(!d)return;
- let h='<svg viewBox="-8 -8 416 336" style="width:100%;max-width:460px;display:block;margin:auto" role="img" aria-label="תוכנית הקומה"><defs><pattern id="ht" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="9" style="fill:var(--no);fill-opacity:.28"/></pattern><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0L8,4L0,8z" style="fill:var(--ac)"/></marker></defs>';
- d.rooms.forEach((r,i)=>{h+=`<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" style="fill:var(--fl);stroke:var(--wl);stroke-width:3"/>`;if(i===d.scene)h+=`<rect x="${r.x+1.5}" y="${r.y+1.5}" width="${r.w-3}" height="${r.h-3}" style="fill:url(#ht);stroke:var(--no);stroke-width:3"/>`});
- d.doors.forEach(o=>h+=o.v?`<rect x="${o.x-2.5}" y="${o.y-11}" width="5" height="22" style="fill:var(--fl)"/>`:`<rect x="${o.x-11}" y="${o.y-2.5}" width="22" height="5" style="fill:var(--fl)"/>`);
- d.rooms.forEach((r,i)=>{const sp=r.w<120&&r.label.includes(" "),k=r.label.indexOf(" "),ln=sp?[r.label.slice(0,k),r.label.slice(k+1)]:[r.label];
-  ln.forEach((t,j)=>h+=`<text x="${r.x+r.w/2}" y="${r.y+18+j*14}" style="fill:var(--fg)">${esc(t)}</text>`);
-  if(i===d.scene)h+=`<text x="${r.x+r.w/2}" y="${r.y+18+ln.length*14}" style="fill:var(--no)">🔍 זירת הרצח</text>`});
- const cn={},ix=[];d.route.forEach(s=>{ix.push(cn[s.room]||0);cn[s.room]=(cn[s.room]||0)+1});
- const P=d.route.map((s,k)=>{const r=d.rooms[s.room];return{x:r.x+r.w/2+(ix[k]-(cn[s.room]-1)/2)*26,y:r.y+r.h-20}});
- for(let k=1;k<P.length;k++){if(d.route[k].room===d.route[k-1].room)continue;const a=P[k-1],b=P[k];
-  h+=`<path d="M${a.x} ${a.y} Q${(a.x+b.x)/2+(b.y-a.y)*.18} ${(a.y+b.y)/2-(b.x-a.x)*.18} ${b.x} ${b.y}" style="fill:none;stroke:var(--ac);stroke-width:2;stroke-dasharray:5 4" marker-end="url(#ar)"/>`}
- P.forEach((q,k)=>h+=`<circle cx="${q.x}" cy="${q.y}" r="11" style="fill:var(--ac);stroke:var(--card);stroke-width:2"/><text x="${q.x}" y="${q.y+4}" style="fill:#fff">${k+1}</text>`);
- $("#mapbox").innerHTML=h+`</svg><h4>המסלול שלך</h4>`+d.route.map((s,k)=>`<div class="pr"><span class="num">${k+1}</span><span class="n"><b>${s.t}</b> ${esc(s.full)}<br><span class="mut">${s.saw.length?"ראית: "+s.saw.map(esc).join(", "):"לא ראית אף אחד"}</span></span></div>`).join("")+
- `<p style="margin:10px 0 0"><b>הרצח התרחש ${esc(d.sceneFull)}.</b><br>בזמן הרצח (21:45) אתה היית ${esc(d.mineFull)}.</p><p class="mut" style="margin:4px 0 0">רק אתה רואה את המסלול שלך.</p>`}
-const marks=()=>{try{return JSON.parse(L("mm-sus-"+S.code)||"{}")}catch(e){return{}}};
-function setMark(i){const m=marks();m[i]=!m[i];L("mm-sus-"+S.code,JSON.stringify(m));drawBoard()}
-function drawBoard(){const m=S.s;if(!m||!m.roster)return;const mk=marks(),mine=m.myVote,can=!mine&&S.ph.p==="play";
- $("#pb").innerHTML=`<div class="card"><p class="mut">כולם חשודים כברירת מחדל. הסר חשודים לעצמך, ואז הצבע. אחרי ההצבעה היא ננעלת.</p>`+
- m.roster.filter(p=>p.id!==ID).map(p=>`<div class="pr ${mk[p.id]?"clr":""}"><span class="n">${esc(p.name)}</span><button data-m="${p.id}">${mk[p.id]?"החזר לחשוד":"הסר מהחשודים"}</button>`+
- (mine?(mine===p.id?"<b>✔ הצבעת</b>":""):`<button class="${S.pend===p.id?"p":""}" data-v="${p.id}" ${can?"":"disabled"}>${S.pend===p.id?"לחץ שוב לאישור":"הצבע"}</button>`)+`</div>`).join("")+
- (mine?`<p class="mut">הצבעת. ממתינים לשאר השחקנים או לסיום הזמן (${m.voted.length}/${m.roster.length} הצביעו).</p>`:"")+"</div>"}
-function tick(){const m=S.s;if(!m||m.status!=="playing"||!m.roster)return;const f=S.ph,ov=$("#ov");
- const fmt=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
- if(f.p==="play"){$("#ph").textContent="החקירה נמשכת";$("#tm").textContent=fmt(f.left);ov.classList.add("hide");return}
- $("#tm").textContent="00:00";ov.classList.remove("hide");
- if(f.p==="count"){ov.innerHTML=`<p class="mut" style="text-align:center">ההצבעה נסגרה. התוצאה בעוד…</p><div class="cnt">${f.n}</div>`;return}
- const r=m.result;if(!r){ov.innerHTML='<p class="mut" style="text-align:center;margin-top:30vh">טוען תוצאות…</p>';return}
- ov.innerHTML=(r.none?`<div class="big no">אף אחד לא הצביע</div>`:`<p class="mut" style="text-align:center">הנאשם לפי רוב הקולות:</p><div class="big ${r.ok?"ok":"no"}">${r.top.map(esc).join(" / ")}</div><p style="text-align:center">${r.ok?"✔ צדקתם! הרוצח נתפס.":"✘ טעיתם. הרוצח ברח."}</p>`)+
- `<div class="card"><h3>מי הצביע על מי</h3>${r.votes.map(v=>`<div class="pr"><span class="n">${esc(v.name)}</span>${v.target?"← "+esc(v.target):'<span class="mut">לא הצביע</span>'}</div>`).join("")}</div>`+
- (r.ok?"":`<div class="card kill story" style="margin-top:8px"><h3>הרוצח האמיתי: ${esc(r.killer)}</h3>${r.killerStory}</div>`)+
- `<button class="p" data-act="home" style="width:100%;margin-top:10px">🏠 משחק חדש</button>`}
-document.addEventListener("click",async e=>{audio();const b=e.target.closest("button");if(!b)return;const a=b.dataset.act;
- if(a==="back")return arm(b);if(a==="home")return goHome();
- if(a==="help")return $("#hp").classList.remove("hide");if(a==="closehelp")return $("#hp").classList.add("hide");
- if(a==="bell"){S.mute=!S.mute;b.textContent=S.mute?"🔕":"🔔";return}
- if(b.dataset.t){S.tab=b.dataset.t;document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x===b));
-  ["c","s","m","b"].forEach(t=>$("#p"+t).classList.toggle("hide",t!==S.tab));if(S.tab==="c"&&S.s)drawThreads()}
- if(b.dataset.th){S.th=b.dataset.th;drawThreads()}
- if(b.dataset.m)setMark(b.dataset.m);
- if(b.dataset.v){if(S.pend!==b.dataset.v){S.pend=b.dataset.v;drawBoard();return}
-  const t=S.pend;S.pend=null;try{await API("/api/vote",{code:S.code,target:t})}catch(x){}}});
-$("#join").onclick=()=>enter("join");$("#new").onclick=()=>enter("new");$("#test").onclick=()=>enter("test");
-$("#cs").onclick=async()=>{const i=$("#ci"),t=i.value.trim();if(!t||!S.th)return;i.value="";try{await API("/api/chat",{code:S.code,to:S.th,text:t})}catch(e){}};
-$("#ci").onkeydown=e=>{if(e.key==="Enter")$("#cs").click()};
-$("#start").onclick=()=>API("/api/start",{code:S.code}).catch(e=>err(e.message));
-$("#notes").oninput=()=>{clearTimeout(window._nt);window._nt=setTimeout(()=>L("mm-note-"+S.code+ID,$("#notes").value),400)};
-$("#nm").value=L("mm-name")||"";
-(async()=>{const c=L("mm-code"),n=L("mm-name");if(c&&n){try{const r=await API("/api/join",{name:n,code:c});connect(r.code)}catch(e){L("mm-code",null)}}})();
-</script></body></html>
+const $ = id => document.getElementById(id);
+
+let code = "";
+let pid = "";
+let state = null;
+let events = null;
+let previousPending = null;
+let timerValue = 1800;
+
+function showScreen(screen) {
+  ["home","lobby","game","results"].forEach(id => {
+    $(id).classList.toggle("hidden", id !== screen);
+  });
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+function message(id, text) {
+  $(id).textContent = text || "";
+}
+
+async function api(url, data = {}) {
+  const response = await fetch(url, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({ ...data, code, pid })
+  });
+
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || "אירעה שגיאה");
+  return result;
+}
+
+function saveSession() {
+  localStorage.setItem("personalitySession", JSON.stringify({code,pid}));
+}
+
+function connect() {
+  if (events) events.close();
+
+  events = new EventSource(
+    `/events?code=${encodeURIComponent(code)}&pid=${encodeURIComponent(pid)}`
+  );
+
+  events.onmessage = event => {
+    state = JSON.parse(event.data);
+    timerValue = Math.floor(state.remaining / 1000);
+    render();
+  };
+
+  events.onerror = () => {
+    message("notice","החיבור מתחדש. אם יצאת מהמשחק, נסה להמתין כמה שניות.");
+  };
+}
+
+async function enter(result) {
+  code = result.code;
+  pid = result.pid;
+  saveSession();
+  connect();
+}
+
+$("create").onclick = async () => {
+  try {
+    const result = await api("/api/create", {name:$("name").value});
+    await enter(result);
+    showScreen("lobby");
+  } catch (e) {
+    message("homeError",e.message);
+  }
+};
+
+$("join").onclick = async () => {
+  try {
+    const result = await api("/api/join", {
+      name:$("name").value,
+      code:$("joinCode").value
+    });
+    await enter(result);
+    showScreen("lobby");
+  } catch (e) {
+    message("homeError",e.message);
+  }
+};
+
+$("savePersonality").onclick = async () => {
+  try {
+    await api("/api/personality", {personality:$("personality").value});
+    message("personalityStatus","האישיות נשמרה בסוד.");
+  } catch (e) {
+    message("lobbyError",e.message);
+  }
+};
+
+$("start").onclick = async () => {
+  try {
+    await api("/api/start");
+  } catch (e) {
+    message("lobbyError",e.message);
+  }
+};
+
+$("sendQuestion").onclick = async () => {
+  try {
+    await api("/api/ask", {
+      targetId:$("askTarget").value,
+      text:$("askText").value
+    });
+    $("askText").value = "";
+    message("askStatus","השאלה נשלחה. התור שלך הסתיים.");
+  } catch (e) {
+    message("askStatus",e.message);
+  }
+};
+
+$("sendChat").onclick = async () => {
+  try {
+    await api("/api/chat",{text:$("chatText").value});
+    $("chatText").value = "";
+  } catch (e) {
+    message("notice",e.message);
+  }
+};
+
+$("answerYes").onclick = () => answer(true);
+$("answerNo").onclick = () => answer(false);
+
+async function answer(value) {
+  try {
+    await api("/api/answer",{answer:value});
+    $("questionOverlay").classList.add("hidden");
+  } catch (e) {
+    message("notice",e.message);
+  }
+}
+
+window.makeGuess = async targetId => {
+  try {
+    const text = $("guess-" + targetId).value;
+    const result = await api("/api/guess",{targetId,text});
+
+    message(
+      "guessStatus",
+      result.correct
+        ? `ניחוש נכון! קיבלת ${result.points} נקודות.`
+        : `לא נכון. נשארו לך ${result.guessesLeft} ניחושים.`
+    );
+  } catch (e) {
+    message("guessStatus",e.message);
+  }
+};
+
+function render() {
+  if (!state) return;
+
+  if (state.status === "lobby") {
+    showScreen("lobby");
+    $("roomCode").textContent = state.code;
+
+    $("lobbyPlayers").innerHTML = state.players.map(p =>
+      `<span class="pill">${esc(p.name)} ${p.ready ? "✓" : "…"}</span>`
+    ).join("");
+
+    const host = state.hostId === pid;
+    $("start").classList.toggle("hidden",!host);
+    $("start").disabled = state.players.length < 2 ||
+      state.players.some(p => !p.ready);
+
+    return;
+  }
+
+  if (state.status === "playing") {
+    showScreen("game");
+    renderGame();
+    return;
+  }
+
+  if (state.status === "finished") {
+    showScreen("results");
+    renderResults();
+  }
+}
+
+function renderGame() {
+  $("gameCode").textContent = state.code;
+  $("round").textContent = state.round;
+
+  const minutes = Math.floor(state.remaining / 60000);
+  const seconds = Math.floor((state.remaining % 60000) / 1000);
+
+  $("timer").textContent =
+    String(minutes).padStart(2,"0") + ":" +
+    String(seconds).padStart(2,"0");
+
+  $("turnBanner").classList.toggle("hidden",!state.myTurn);
+  $("askPanel").classList.toggle("turn-area",state.myTurn);
+
+  $("notTurn").textContent = state.myTurn
+    ? "זה התור שלך! בחר משתתף ושאל שאלה."
+    : "ממתינים לתור שלך…";
+
+  $("gamePlayers").innerHTML = state.players.map(p =>
+    `<span class="pill">${esc(p.name)}
+      ${p.id === state.turnPlayer ? " ◀" : ""}
+    </span>`
+  ).join("");
+
+  const available = state.targets.filter(t => !t.blocked);
+
+  $("askTarget").innerHTML = available.length
+    ? available.map(t =>
+        `<option value="${t.id}">${esc(t.name)}</option>`
+      ).join("")
+    : `<option value="">אין משתתפים זמינים</option>`;
+
+  $("sendQuestion").disabled = !state.myTurn || !available.length;
+
+  // השאלות שקיבל השחקן
+  $("myQuestions").innerHTML = state.questions.length
+    ? state.questions.map(q => {
+        const asker = state.players.find(p => p.id === q.fromId);
+        const css = !q.answered ? "" : q.answer ? "yes" : "no";
+        const answer = !q.answered
+          ? "ממתינה לתשובתך"
+          : q.answer ? "✓ כן" : "✕ לא";
+
+        return `
+          <div class="question ${css}">
+            <small>מאת ${esc(asker?.name || "שחקן")}</small>
+            <b>${esc(q.text)}</b>
+            <div>${answer}</div>
+          </div>`;
+      }).join("")
+    : `<p class="muted">עדיין לא שאלו אותך שאלות.</p>`;
+
+  // פרטים ידועים לפי משתתף
+  $("known").innerHTML = state.players.map(p => {
+    const items = state.known[p.id] || [];
+
+    return `
+      <div style="margin-bottom:13px">
+        <b>${esc(p.name)}</b>
+        ${
+          items.length
+            ? items.map(item =>
+                `<div class="known-item">✓ ${esc(item)}</div>`
+              ).join("")
+            : `<p class="muted small">אין עדיין פרטים ידועים.</p>`
+        }
+      </div>`;
+  }).join("");
+
+  // צ'אט ציבורי
+  $("chatlog").innerHTML = state.chat.map(item => `
+    <div class="chat-message">
+      <b>${esc(item.from)}:</b> ${esc(item.text)}
+    </div>
+  `).join("");
+
+  $("chatlog").scrollTop = $("chatlog").scrollHeight;
+
+  // ניחושים
+  $("guessArea").innerHTML = state.targets.map(t => `
+    <div class="guess-row">
+      <div>
+        <b>${esc(t.name)}</b>
+        <div class="muted small">
+          ${t.blocked ? "האפשרות נסגרה" : `נותרו ${t.guessesLeft} ניחושים`}
+        </div>
+      </div>
+
+      <input id="guess-${t.id}" placeholder="מה האישיות?"
+        ${t.blocked ? "disabled" : ""}>
+
+      <button onclick="makeGuess('${t.id}')"
+        ${t.blocked ? "disabled" : ""}>נחש</button>
+    </div>
+  `).join("");
+
+  // היסטוריית ניחושים
+  $("myHistory").innerHTML = state.myGuesses.length
+    ? state.myGuesses.map(g => {
+        const target = state.players.find(p => p.id === g.targetId);
+        return `<div class="chat-message">
+          ${esc(target?.name || "שחקן")}: ${esc(g.text)}
+          — ${g.correct ? "✓ נכון" : "✕ לא נכון"}
+        </div>`;
+      }).join("")
+    : "עדיין אין ניחושים.";
+
+  // חלונית שאלה גדולה
+  if (state.pendingQuestion) {
+    if (previousPending !== state.pendingQuestion.id) {
+      $("overlayQuestion").textContent = state.pendingQuestion.text;
+      $("questionOverlay").classList.remove("hidden");
+      previousPending = state.pendingQuestion.id;
+    }
+  } else {
+    $("questionOverlay").classList.add("hidden");
+    previousPending = null;
+  }
+}
+
+function renderResults() {
+  const results = state.results || [];
+  const winner = results[0];
+
+  $("winner").innerHTML = winner
+    ? `<h1>🏆 ${esc(winner.name)}</h1>
+       <div class="score">${winner.points.toLocaleString()} נקודות</div>`
+    : "";
+
+  $("ranking").innerHTML = results.map((p,index) => `
+    <div class="rank">
+      ${index + 1}. <b>${esc(p.name)}</b>
+      — ${p.points.toLocaleString()} נקודות
+    </div>
+  `).join("");
+
+  $("allGuesses").innerHTML = results.map(p => `
+    <div class="panel">
+      <h3>${esc(p.name)}</h3>
+      <p>האישיות שבחר: <b>${esc(p.personality)}</b></p>
+      ${
+        p.guesses.length
+          ? p.guesses.map(g => {
+              const min = Math.floor(g.seconds / 60);
+              const sec = g.seconds % 60;
+              return `
+                <div class="chat-message">
+                  ניחש את ${esc(g.targetName)}:
+                  ${esc(g.text)} —
+                  ${g.correct ? "✓ נכון" : "✕ לא נכון"} —
+                  ${min}:${String(sec).padStart(2,"0")}
+                  ${g.correct ? `(${g.points} נקודות)` : ""}
+                </div>`;
+            }).join("")
+          : `<p class="muted">לא נשלחו ניחושים.</p>`
+      }
+    </div>
+  `).join("");
+}
+
+$("showAll").onclick = () => {
+  $("allGuesses").classList.toggle("hidden");
+  $("showAll").textContent =
+    $("allGuesses").classList.contains("hidden")
+      ? "הבא – הצגת כל הניחושים"
+      : "הסתרת הניחושים";
+};
+
+// הוראות עם הדגמות
+const helpItems = [
+  ["בחירת שם ואישיות",
+   "במסך הראשון בוחרים שם שיופיע במשחק ואת האישיות הסודית שלך."],
+  ["תורות",
+   "כל שחקן מקבל תור אחד בסיבוב. השחקן הראשון נבחר באקראי."],
+  ["שאלת שחקן",
+   "בתורך בוחרים משתתף, כותבים שאלה ושולחים. אחרי השליחה התור מסתיים."],
+  ["חלונית תשובה",
+   "מי שקיבל שאלה רואה חלונית גדולה ומסמן כן או לא."],
+  ["צ'אט פתוח",
+   "כולם יכולים לכתוב בצ'אט בכל זמן, גם כשזה לא התור שלהם."],
+  ["פרטים ידועים",
+   "כל שאלה שקיבלה תשובת כן מופיעה ברשימת הפרטים הידועים."],
+  ["ניחושים",
+   "יש שני ניחושים לכל משתתף אחר. ניחוש נכון סוגר את האפשרות לשאול ולנחש אותו."],
+  ["בדיקת תשובה",
+   "אפשר לנחש מילה אחת מתוך שם בן שתי מילים. טעות של אות אחת אינה פוסלת."],
+  ["ניקוד",
+   "ניחוש נכון מזכה לפי הזמן שנותר. לדוגמה: 15:20 שווה 1520 נקודות."],
+  ["חזרה למשחק",
+   "אם יוצאים מהדפדפן וחוזרים מאותו מכשיר, המערכת מנסה להתחבר לאותו שחקן."],
+  ["סיום המשחק",
+   "אחרי 30 דקות מוצגת טבלת הניצחון ופירוט כל הניחושים."]
+];
+
+const demos = [
+  `<div class="demo-box">השם שלי: שחקן א<br>האישיות הסודית שלי נשארת מוסתרת.</div>`,
+  `<div class="turn-banner">✨ תורך!</div>`,
+  `<div class="demo-box"><select><option>בחר שחקן</option><option>שחקן ב</option></select><p>האם אתה אוהב מוזיקה?</p></div>`,
+  `<div class="demo-box"><h2>האם אתה אוהב מוזיקה?</h2><button class="green">✓ כן</button> <button class="red">✕ לא</button></div>`,
+  `<div class="demo-box">שחקן א: שלום לכולם!<hr>שחקן ב: בהצלחה!</div>`,
+  `<div class="demo-box" style="background:#b9f5ca">✓ קשור למוזיקה</div>`,
+  `<div class="demo-box">שחקן ב — נותרו שני ניחושים</div>`,
+  `<div class="demo-box">אישיות: דוד בן גוריון<br>ניחוש: דוד</div>`,
+  `<div class="demo-box">15:20 = 1520 נקודות</div>`,
+  `<div class="demo-box">קוד חדר: A7K2P<br>חזרה לאותו שחקן</div>`,
+  `<div class="demo-box">🥇 שחקן א — 2450 נקודות</div>`
+];
+
+function openHelp() {
+  $("helpContent").innerHTML = helpItems.map((item,index) => `
+    <div class="help-item">
+      <b>${index + 1}. ${item[0]}</b>
+      <p>${item[1]}</p>
+      <button class="secondary" onclick="showDemo(${index})">הדגם</button>
+      <div id="demo-${index}" class="demo hidden"></div>
+    </div>
+  `).join("");
+
+  $("helpOverlay").classList.remove("hidden");
+}
+
+window.showDemo = index => {
+  const el = $("demo-" + index);
+  el.classList.toggle("hidden");
+  el.innerHTML = demos[index];
+};
+
+$("openHelp").onclick = openHelp;
+$("lobbyHelp").onclick = openHelp;
+$("closeHelp").onclick = () => $("helpOverlay").classList.add("hidden");
+
+setInterval(() => {
+  if (state?.status !== "playing") return;
+
+  timerValue = Math.max(0,timerValue - 1);
+  const min = Math.floor(timerValue / 60);
+  const sec = timerValue % 60;
+
+  $("timer").textContent =
+    String(min).padStart(2,"0") + ":" +
+    String(sec).padStart(2,"0");
+},1000);
+
+// שחזור חיבור אוטומטי
+(async () => {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("personalitySession") || "null"
+    );
+
+    if (saved?.code && saved?.pid) {
+      code = saved.code;
+      pid = saved.pid;
+
+      const response = await fetch("/api/reconnect", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({code,pid})
+      });
+
+      if (response.ok) connect();
+      else localStorage.removeItem("personalitySession");
+    }
+  } catch {
+    localStorage.removeItem("personalitySession");
+  }
+})();
+</script>
+</body>
+</html>
